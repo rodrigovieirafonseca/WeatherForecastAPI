@@ -13,6 +13,7 @@ namespace ClimaTempoSimples.Models
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     using System.Linq;
+    using System.Globalization;
     
     public partial class ClimaTempoDBEntities : DbContext
     {
@@ -46,6 +47,10 @@ namespace ClimaTempoSimples.Models
         public PrevisaoClima ClimaNaCidadeNoDia(int id, DateTime data)
         {
             return PrevisaoClimas.Where(x => x.CidadeId == id).Where(x => x.DataPrevisao == data).FirstOrDefault();
+        }
+        public string DiaDaSemanaNaCidadeAPartirDoDiaDeHoje(int id, int diasDepois)
+        {
+            return DateTime.Now.AddDays(diasDepois).ToString("dddd",new CultureInfo("pt-BR"));
         }
     }
 }
