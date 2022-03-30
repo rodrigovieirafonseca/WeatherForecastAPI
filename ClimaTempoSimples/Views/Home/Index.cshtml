@@ -1,0 +1,116 @@
+﻿@model ClimaTempoSimples.Models.ClimaTempoDBEntities
+
+<h1>Clima Tempo Simples </h1>
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Cidades mais quentes hoje</h3>
+                </div>
+                <div class="panel-body">
+                    <table class="table">
+                        @for (int i = 1; i <= 3; i++)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(model => model.TemperaturaMaxima(i).Cidade.Nome)
+                                </td>
+                                <td>
+                                    Min @Html.DisplayFor(model => model.TemperaturaMaxima(i).TemperaturaMinima) ºC
+                                </td>
+                                <td>
+                                    Max @Html.DisplayFor(model => model.TemperaturaMaxima(i).TemperaturaMaxima) ºC
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Cidades mais frias hoje</h3>
+                </div>
+                <div class="panel-body">
+                    <table class="table">
+                        @for (int i = 1; i <= 3; i++)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(model => model.TemperaturaMinima(i).Cidade.Nome)
+                                </td>
+                                <td>
+                                    Min @Html.DisplayFor(model => model.TemperaturaMinima(i).TemperaturaMinima) ºC
+                                </td>
+                                <td>
+                                    Max @Html.DisplayFor(model => model.TemperaturaMinima(i).TemperaturaMaxima) ºC
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<form action="/" method="post">
+    <select id="CidadeId" name="CidadeId">
+                <option value="0">Escolha uma Cidade</option>
+        @{for (int i = 1; i <= Model.CidadeIdMaximo().CidadeId; i++)
+            {
+                <option value="@i">@Model.EncontrarCidadePorId(i).Nome</option>
+            }
+        }
+    </select>
+    <input type="submit" value="Enviar" />
+</form>
+
+@{ICollection<object> cidadeId = ViewData.Values;
+    string cidades = "1";
+    int Cidade = 1;
+    foreach (string x in cidadeId)
+    {
+        cidades = x;
+    }
+    Cidade = Int32.Parse(cidades);
+}
+<h2>Previsão da cidade @Html.DisplayFor(model => model.EncontrarCidadePorId(Cidade).Nome) nos proximos 7 dias: </h2>
+<div class="container">
+    <div class="row justify-content-md-center">
+        @for (int i = 1; i <= 7; i++)
+        {
+            <div class="col-md-1" style="width: 14.25%;flex: 0 0 14.25%;max-width: 14.25%;">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">@DateTime.Now.Add(new System.TimeSpan(i, 0, 0, 0)).DayOfWeek </h3>
+                    </div>
+                    <div class="panel-body">
+                        <table class="table">
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(model => model.ClimaNaCidadeNoDia(Cidade, DateTime.Now.Add(new System.TimeSpan(i, 0, 0, 0)).Date).Clima)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Min @Html.DisplayFor(model => model.ClimaNaCidadeNoDia(Cidade, DateTime.Now.Add(new System.TimeSpan(i, 0, 0, 0)).Date).TemperaturaMinima) ºC
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Max @Html.DisplayFor(model => model.ClimaNaCidadeNoDia(Cidade, DateTime.Now.Add(new System.TimeSpan(i, 0, 0, 0)).Date).TemperaturaMaxima) ºC
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
